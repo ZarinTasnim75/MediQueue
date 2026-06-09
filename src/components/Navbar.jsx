@@ -5,12 +5,12 @@ import Link from "next/link";
 import React from "react";
 import { FaBars } from "react-icons/fa";
 
-const Navbar = () => {
+const Navbar = ({user}) => {
 
-    const user = {
-        name: "Zarin",
-        url: "https://i.pravatar.cc/150?img=5",
-    };
+    // const user = {
+    //     name: "Zarin",
+    //     url: "https://i.pravatar.cc/150?img=5",
+    // };
 
     const navLinks = (
         <>
@@ -48,16 +48,14 @@ const Navbar = () => {
             <div className="navbar-end gap-2">
                 {!user ? (
                     <>
-                        <Link href="/login" className="btn" style={{
+                        <Link href="/login" className="btn hover:scale-105" style={{
                             backgroundColor: "#FFAE6E",
                             border: "none",
-                            color: "black",
-                        }} >Login</Link>
-                        <Link href="/register" className="btn" style={{
+                            color: "black", }} >Login</Link>
+                        <Link href="/register" className="btn hover:scale-105 " style={{
                             backgroundColor: "#EC6530",
                             border: "none",
-                            color: "white",
-                        }} >Register</Link>
+                            color: "white", }} >Register</Link>
                     </>
                 ) : (
                     <div className="dropdown dropdown-end">
