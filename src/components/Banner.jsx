@@ -16,13 +16,13 @@ const Banner = () => {
 
     return (
         <div>
-            <div className="h-1 w-full bg-gradient-to-r from-[#8FDDDF] via-[#FFAE6E] to-[#EC6530]"></div>
+            
 
             <div className="relative w-full h-[500px] overflow-hidden">
 
                 <div className={`absolute inset-0 transition-opacity duration-500 ${currentSlide === 0 ? "opacity-100 z-10" : "opacity-0 z-0"}`}>
                     <Image src="https://images.openai.com/static-rsc-4/ko4ZJeVY7SY3im0o-Fe7wXYo4ttW9p43HRfI8RaUhOAf1wyCbdWKITI91mKNnDIenN_YE1PAQn-CvOMY5zGnQHmEezjUm96cKcYldTFuxOM7aUAbGLQPK654KqnZ6MYoUzgUw8a3MkHzUIaHiKNcciyCJd8H9EwdP6QP5RPTxTUZHMEQwUfATSNr5bWMRoqE?purpose=fullsize" alt="Learning" fill className="object-cover" priority />
-                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-center text-white">
+                    <div className="absolute inset-0 bg-black/45 flex items-center justify-center text-center text-white">
                         <div>
                             <h1 className="text-5xl font-bold text-[#dc50e6] [text-shadow:4px_4px_2_#9a21a3] tracking-widest">
                                 Find the Perfect Tutor 

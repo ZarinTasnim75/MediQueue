@@ -5,12 +5,12 @@ import Link from "next/link";
 import React from "react";
 import { FaBars } from "react-icons/fa";
 
-const Navbar = ({user}) => {
+const Navbar = () => {
 
-    // const user = {
-    //     name: "Zarin",
-    //     url: "https://i.pravatar.cc/150?img=5",
-    // };
+    const user = {
+        name: "Zarin",
+        url: "https://i.pravatar.cc/150?img=5",
+    };
 
     const navLinks = (
         <>
@@ -28,6 +28,7 @@ const Navbar = ({user}) => {
     );
 
     return (
+        <div>
         <div className="navbar bg-base-100 shadow-md px-4" style={{ backgroundColor: "#FFE3E3" }}>
 
             <div className="navbar-start">
@@ -72,7 +73,9 @@ const Navbar = ({user}) => {
                         </ul>
                     </div>
                 )}
-            </div>
+            </div>   
+        </div>
+        <div className="h-1 w-full bg-gradient-to-r from-[#8FDDDF] via-[#FFAE6E] to-[#EC6530]"></div>
         </div>
     );
 };

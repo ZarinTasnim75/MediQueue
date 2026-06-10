@@ -4,8 +4,7 @@ import { FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube } from "react-icons/f
 
 const Footer = () => {
     return (
-        <footer
-            className="relative mt-20"
+        <footer className="relative"
             style={{ backgroundColor: "#FFE3E3" }} >
             <div className="h-2 w-full" style={{
                 background: "linear-gradient(to right, #8FDDDF, #FFAE6E, #EC6530)" }} />
