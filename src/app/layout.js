@@ -26,8 +26,7 @@ export default function RootLayout({ children }) {
       <body className="min-h-full">
         <div className="flex">
           <div className="fixed left-0 top-0 h-screen w-9.5 z-50">
-            <Image src="/assests/ruler.png" alt="ruler"  width={100} height={500}
-              className="h-screen w-full object-cover" />
+            <Image src="/assets/ruler.png" alt="ruler"  width={100} height={500} className="h-screen w-full object-cover" priority />
           </div>
           <div className="ml-10 w-full flex flex-col min-h-screen">
             <Navbar />
