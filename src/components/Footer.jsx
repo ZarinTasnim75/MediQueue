@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube } from "react-icons/fa";
+import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
+import { FaX } from "react-icons/fa6";
 
 const Footer = () => {
     return (
@@ -66,7 +67,7 @@ const Footer = () => {
                             <div className="w-10 h-10 rounded-full flex items-center justify-center duration-300 hover:scale-110 bg-[#FFAE6E]"><FaFacebookF size={18} className="text-white" /></div>
                             <div className="w-10 h-10 rounded-full flex items-center justify-center duration-300 hover:scale-110 bg-[#FFAE6E]"><FaInstagram size={18} className="text-white" /></div>
                             <div className="w-10 h-10 rounded-full flex items-center justify-center duration-300 hover:scale-110 bg-[#FFAE6E]"><FaLinkedinIn size={18} className="text-white" /></div>
-                            <div className="w-10 h-10 rounded-full flex items-center justify-center duration-300 hover:scale-110 bg-[#FFAE6E]"><FaYoutube size={18} className="text-white" /></div>
+                            <div className="w-10 h-10 rounded-full flex items-center justify-center duration-300 hover:scale-110 bg-[#FFAE6E]"><FaX size={18} className="text-white" /></div>
                         </div>
 
                         <p className="mt-4 text-gray-700">
