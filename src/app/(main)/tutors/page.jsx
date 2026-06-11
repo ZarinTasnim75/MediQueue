@@ -47,19 +47,13 @@ const TutorPage = async () => {
                                     <div className="bg-[#F8FAFC] rounded-xl p-4 w-full space-y-3">
 
                                         <div className="flex justify-between">
-                                            <span className="font-semibold text-gray-600">
-                                                Hourly Fee
-                                            </span>
+                                            <span className="font-semibold text-gray-600"> Hourly Fee  </span>
 
-                                            <span className="font-bold text-[#EC6530]">
-                                                ${tutor.hourlyFee}
-                                            </span>
+                                            <span className="font-bold text-[#EC6530]">  ${tutor.hourlyFee} </span>
                                         </div>
 
                                         <div className="flex justify-between">
-                                            <span className="font-semibold text-gray-600">
-                                                Location
-                                            </span>
+                                            <span className="font-semibold text-gray-600"> Location </span>
 
                                             <span>
                                                 {tutor.location}

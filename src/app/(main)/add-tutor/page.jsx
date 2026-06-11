@@ -9,14 +9,16 @@ import Image from "next/image";
 
 const AddTutorPage = () => {
 
-    const onSubmit = async(e) =>{
+    const onSubmit = async (e) => {
         e.preventDefault()
-        const formData = new FormData(e.currentTarget)
-        const tutor = Object.fromEntries(formData.entries())
+        const formData = new FormData(e.currentTarget);
 
-        console.log(tutor)
-
-       const res= await fetch('http://localhost:5000/tutor' ,{ 
+        const tutor = Object.fromEntries(formData.entries());
+        tutor.hourlyFee = Number(tutor.hourlyFee);
+        tutor.totalSlot = Number(tutor.totalSlot);
+        tutor.sessionDate = selectedDate.toISOString().split("T")[0];
+        console.log(tutor);
+        const res = await fetch('http://localhost:5000/tutor', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
@@ -25,8 +27,7 @@ const AddTutorPage = () => {
         })
 
         const data = await res.json()
-        console.log(data)
-        
+
     }
 
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -43,8 +44,8 @@ const AddTutorPage = () => {
 
                     <p className="text-center text-gray-100 mb-8"> Let others find you as a tutor  </p>
 
-                    <form onSubmit={onSubmit} 
-                    className="space-y-6 ">
+                    <form onSubmit={onSubmit}
+                        className="space-y-6 ">
                         <div className="grid md:grid-cols-2 gap-6">
                             <fieldset className="fieldset">
                                 <label className="label text-white text-xl">Tutor Name</label>
@@ -104,6 +105,8 @@ const AddTutorPage = () => {
                                     <DatePicker selected={selectedDate}
                                         onChange={(date) => setSelectedDate(date)} dateFormat="dd/MM/yyyy"
                                         className="input input-bordered pl-10" />
+
+                                    <input type="hidden" name="sessionDate" value={selectedDate.toISOString()} />
                                 </div>
                             </fieldset>
 
