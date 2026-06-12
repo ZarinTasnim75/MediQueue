@@ -6,29 +6,45 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
 import { FaCalendarAlt } from "react-icons/fa";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 const AddTutorPage = () => {
 
     const onSubmit = async (e) => {
-        e.preventDefault()
+    e.preventDefault();
+
+    try {
         const formData = new FormData(e.currentTarget);
 
         const tutor = Object.fromEntries(formData.entries());
+
         tutor.hourlyFee = Number(tutor.hourlyFee);
         tutor.totalSlot = Number(tutor.totalSlot);
         tutor.sessionDate = selectedDate.toISOString().split("T")[0];
-        console.log(tutor);
-        const res = await fetch('http://localhost:5000/tutor', {
-            method: 'POST',
+
+        const res = await fetch("http://localhost:5000/tutor", {
+            method: "POST",
             headers: {
-                'content-type': 'application/json'
+                "content-type": "application/json",
             },
-            body: JSON.stringify(tutor)
-        })
+            body: JSON.stringify(tutor),
+        });
 
-        const data = await res.json()
+        const data = await res.json();
 
+        if (res.ok) {
+            toast.success("Tutor added successfully!");
+
+            e.target.reset();
+            setSelectedDate(new Date());
+        } else {
+            toast.error(data.message || "Failed to add tutor");
+        }
+    } catch (error) {
+        toast.error("Something went wrong!");
+        console.error(error);
     }
+};
 
     const [selectedDate, setSelectedDate] = useState(new Date());
     return (

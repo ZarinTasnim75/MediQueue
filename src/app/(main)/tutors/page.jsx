@@ -54,24 +54,14 @@ const TutorPage = async () => {
 
                                         <div className="flex justify-between">
                                             <span className="font-semibold text-gray-600"> Location </span>
-
-                                            <span>
-                                                {tutor.location}
-                                            </span>
+                                            <span> {tutor.location}  </span>
                                         </div>
 
                                         <div className="flex justify-between">
-                                            <span className="font-semibold text-gray-600">
-                                                Available
-                                            </span>
-
-                                            <span>
-                                                {tutor.availableDays}
-                                            </span>
+                                            <span className="font-semibold text-gray-600">  Available </span>
+                                            <span>  {tutor.availableDays} </span>
                                         </div>
-
                                     </div>
-
                                 </div>
                             </div>
 
@@ -87,15 +77,12 @@ const TutorPage = async () => {
                         </div>
 
                         <Link href={`/tutors/${tutor._id}`}>
-                            <button className="btn mt-5 bg-[#EC6530] hover:bg-[#d85724] border-none text-white rounded-sm hover:scale-105 px-8 ">
-                                Book Session 
-                            </button>
+                            <button className="btn mt-5 bg-[#EC6530] hover:bg-[#d85724] border-none text-white rounded-sm hover:scale-105 px-8">
+                                Book Session</button>
                         </Link>
-
                     </div>
                 ))}
             </div>
-
         </div>
     );
 };
