@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+import Button from '../../../components/Button';
 
 const TutorPage = async () => {
     const res = await fetch('http://localhost:5000/tutor')
@@ -75,11 +76,7 @@ const TutorPage = async () => {
                             <div></div>
                             <div></div>
                         </div>
-
-                        <Link href={`/tutors/${tutor._id}`}>
-                            <button className="btn mt-5 bg-[#EC6530] hover:bg-[#d85724] border-none text-white rounded-sm hover:scale-105 px-8">
-                                Book Session</button>
-                        </Link>
+                        <Button tutorId={tutor._id} />
                     </div>
                 ))}
             </div>

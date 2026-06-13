@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
-import { FaGoogle } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -32,7 +32,7 @@ export default function RegisterPage() {
 
     if (!validatePassword(password)) {
       toast.error(
-        "Password must have uppercase, lowercase & be 6+ characters"
+        "Password must have uppercase, lowercase & be 8+ characters"
       );
       return;
     }
@@ -51,6 +51,7 @@ export default function RegisterPage() {
         toast.error(res.error.message || "Registration failed");
         return;
       }
+      await authClient.signOut();
 
       toast.success("Registration successful!");
       router.push("/login");
@@ -105,7 +106,7 @@ export default function RegisterPage() {
           <div>
             <label className="text-sm font-semibold text-gray-700"> Password </label>
             <input name="password" type="password" className="input input-bordered w-full mt-1" required />
-            <p className="text-xs text-gray-500 mt-1"> Must contain uppercase, lowercase & 6+ characters </p>
+            <p className="text-xs text-gray-500 mt-1"> Must contain uppercase, lowercase & 8+ characters </p>
           </div>
 
           <button type="submit" disabled={loading} className="w-full py-2 rounded-lg font-semibold text-white transition" style={{ backgroundColor: colors.primary }} > {loading ? "Registering..." : "Register"}
@@ -118,7 +119,7 @@ export default function RegisterPage() {
           <div className="flex-1 h-px bg-gray-300"></div>
         </div>
 
-        <button onClick={handleGoogle} className="w-full flex items-center justify-center gap-3 border rounded-lg py-2 hover:bg-gray-50 transition" > <FaGoogle size={20} /> Continue with Google</button>
+        <button onClick={handleGoogle} className="w-full flex items-center justify-center gap-3 border rounded-lg py-2 hover:bg-gray-50 transition" > <FcGoogle size={20} /> Continue with Google</button>
         <p className="text-center text-sm mt-4"> Already have an account?{" "} <a href="/login" className="font-semibold" style={{ color: colors.primary }} > Login</a> </p>
       </div>
     </div>
