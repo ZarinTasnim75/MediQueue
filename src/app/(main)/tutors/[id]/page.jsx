@@ -114,7 +114,7 @@ const TutorDetailsPage = async ({ params }) => {
                                 )}
 
                                 {!noSlot && !bookingNotStarted && (
-                                    <div className="text-center">  <BookModal tutor={tutor} /> </div>
+                                    <div className="text-center">  <BookModal tutor={tutor} user={user}  /> </div>
                                 )}
                             </div>
                         </div>

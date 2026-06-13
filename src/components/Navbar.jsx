@@ -5,12 +5,12 @@ import Link from "next/link";
 import React from "react";
 import { FaBars } from "react-icons/fa";
 
-const Navbar = () => {
+const Navbar = ({user}) => {
 
-    const user = {
-        name: "Zarin",
-        url: "https://i.pravatar.cc/150?img=5",
-    };
+    // const user = {
+    //     name: "Zarin",
+    //     url: "https://i.pravatar.cc/150?img=5",
+    // };
 
     const navLinks = (
         <>

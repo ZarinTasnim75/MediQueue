@@ -84,7 +84,7 @@ const BookModal = ({ tutor, user }) => {
                             <input
                                 name="bookStatus"
                                 type="text" className="input input-bordered w-full"
-                                value={tutor.totalSlot > 0 ? "Booking available" : "No available slots left"}
+                                defaultValue={tutor.totalSlot > 0 ? "Booking available" : "No available slots left"}
                                 readOnly
                             />
                         </div>
@@ -94,7 +94,7 @@ const BookModal = ({ tutor, user }) => {
                             <button type="button" className="btn" onClick={() => document.getElementById("book_modal").close()}> Cancel </button>
                         </div>
                     </form>
-                    
+
                 </div>
             </dialog>
         </>
