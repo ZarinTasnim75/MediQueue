@@ -24,7 +24,7 @@ const Navbar = () => {
                 <>
                     <li className="text-black hover:bg-[#EC6530] hover:text-white rounded"><Link href="/add-tutor">Add Tutor</Link></li>
                     <li className="text-black hover:bg-[#EC6530] hover:text-white rounded"><Link href="/my-tutors">My Tutors</Link></li>
-                    <li className="text-black hover:bg-[#EC6530] hover:text-white rounded"><Link href="/my-booked-sessions">My Booked Sessions</Link></li>
+                    <li className="text-black hover:bg-[#EC6530] hover:text-white rounded"><Link href="/my-bookings">My Booked Sessions</Link></li>
                 </>
             )}
         </>

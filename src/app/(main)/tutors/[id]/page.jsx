@@ -1,11 +1,11 @@
-import BookModal from '@/components/BookModal';
 import Image from 'next/image';
 import { authClient } from "@/lib/auth-client";
 import React from 'react';
+import BookSection from '@/components/BookSection';
 
 const TutorDetailsPage = async ({ params }) => {
-    const { data: session } = await authClient.getSession?.() || {};
-    const user = session?.user;
+const { data: session } = await authClient.getSession();
+const user = session?.user ?? null;
     const { id } = await params
 
     const res = await fetch(`http://localhost:5000/tutors/${id}`)
@@ -117,7 +117,9 @@ const TutorDetailsPage = async ({ params }) => {
                                 )}
 
                                 {!noSlot && !bookingNotStarted && (
-                                    <div className="text-center">  <BookModal tutor={tutor} user={user} /> </div>
+                                    <div className="flex justify-center">
+                                          <BookSection tutor={tutor} user={user} />
+                                    </div>
                                 )}
                             </div>
                         </div>
