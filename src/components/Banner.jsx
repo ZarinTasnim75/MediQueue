@@ -16,7 +16,6 @@ const Banner = () => {
 
     return (
         <div>
-            
 
             <div className="relative w-full h-[500px] overflow-hidden">
 

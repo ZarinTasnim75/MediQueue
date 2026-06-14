@@ -33,21 +33,16 @@ const CancelButton = ({ id, onCancel }) => {
 
     return (
         <>
-            <button onClick={() => setOpen(true)} className="btn btn-error btn-sm" >
-                Cancel
-            </button>
+            <button onClick={() => setOpen(true)} className="btn btn-error btn-sm" > Cancel </button>
 
             {open && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                     <div className="bg-white p-6 rounded-xl w-[300px] text-center space-y-4">
 
-                        <h2 className="text-lg font-bold">
-                            Cancel Booking?
-                        </h2>
+                        <h2 className="text-lg font-bold"> Cancel Booking? </h2>
 
                         <div className="flex justify-center gap-3">
                             <button onClick={() => setOpen(false)} className="btn btn-sm" >  No </button>
-
                             <button onClick={handleCancel} className="btn btn-error btn-sm" >Yes, Cancel </button>
                         </div>
                     </div>

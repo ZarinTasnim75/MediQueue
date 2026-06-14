@@ -7,8 +7,11 @@ import { useState } from "react";
 import { FaCalendarAlt } from "react-icons/fa";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
 
 const AddTutorPage = () => {
+
+    const { data: session } = authClient.useSession();
 
     const onSubmit = async (e) => {
     e.preventDefault();
@@ -17,7 +20,7 @@ const AddTutorPage = () => {
         const formData = new FormData(e.currentTarget);
 
         const tutor = Object.fromEntries(formData.entries());
-
+        tutor.email = session?.user?.email;
         tutor.hourlyFee = Number(tutor.hourlyFee);
         tutor.totalSlot = Number(tutor.totalSlot);
         tutor.sessionDate = selectedDate.toISOString().split("T")[0];
