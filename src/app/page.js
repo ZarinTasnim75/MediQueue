@@ -4,12 +4,14 @@ import Link from "next/link";
 import React from "react";
 
 async function getTutors() {
-  const res = await fetch("http://localhost:5000/tutor", {
+  const res = await fetch( "http://localhost:5000/tutor?limit=6",
+  {
     cache: "no-store",
-  });
+  }
+);
 
   const data = await res.json();
-  return data.slice(0, 6);
+  return data;
 }
 
 const HomePage = async () => {
