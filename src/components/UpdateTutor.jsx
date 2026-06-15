@@ -59,9 +59,7 @@ const UpdateTutor = ({ tutor, onUpdate }) => {
 
             {open && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-
                     <div className="bg-white w-full max-w-3xl rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
-
                         <h2 className="text-3xl font-bold text-center text-[#EC6530] mb-6">Update Tutor</h2>
 
                         <form onSubmit={handleSubmit} className="space-y-4">

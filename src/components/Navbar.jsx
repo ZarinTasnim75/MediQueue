@@ -12,7 +12,13 @@ const Navbar = () => {
     const router = useRouter();
     const { data: session, isPending } = authClient.useSession();
 
-    if (isPending) return null;
+    if (isPending) {
+    return (
+        <div className="navbar bg-[#FFE3E3] shadow-md px-4 flex justify-center items-center h-16">
+            <span className="loading loading-spinner loading-md text-[#EC6530]"></span>
+        </div>
+    );
+}
     const user = session?.user;
 
     const navLinks = (
