@@ -20,7 +20,7 @@ const TutorDetailsPage = async ({ params }) => {
     const jwtToken = cookieStore.get('auth_token')?.value;
 
     if (!jwtToken) {
-        const tokenResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/get-token`, {
+        const tokenResponse = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/get-token`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -33,7 +33,7 @@ const TutorDetailsPage = async ({ params }) => {
             const data = await tokenResponse.json();
             const newToken = data.token;
 
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tutors/${id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/tutors/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${newToken}`,
                     'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ const TutorDetailsPage = async ({ params }) => {
         }
     }
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tutors/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/tutors/${id}`, {
         headers: {
             'Authorization': `Bearer ${jwtToken}`,
             'Content-Type': 'application/json',

@@ -20,7 +20,7 @@ const DeleteTutor = ({ id, onDelete }) => {
         }
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tutors/${id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/tutors/${id}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",

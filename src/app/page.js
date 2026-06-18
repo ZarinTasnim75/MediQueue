@@ -5,7 +5,7 @@ import Link from "next/link";
 import React from "react";
 
 async function getTutors() {
-  const res = await fetch( "http://localhost:5000/tutor?limit=6",
+  const res = await fetch( `${process.env.NEXT_PUBLIC_SERVER_URL}/tutor?limit=6`,
   {
     cache: "no-store",
   }

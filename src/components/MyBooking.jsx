@@ -32,7 +32,7 @@ export default function MyBooking() {
                     return;
                 }
 
-                const url = `${process.env.NEXT_PUBLIC_API_URL}/bookings?email=${session.user.email}`;
+                const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/bookings?email=${session.user.email}`;
                 const res = await fetch(url, {
                     headers: {
                         'Authorization': `Bearer ${token}`,

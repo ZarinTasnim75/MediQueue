@@ -28,7 +28,7 @@ const BookModal = ({ tutor, user, isOpen, onClose }) => {
         bookingData.bookStatus = tutor.totalSlot > 0 ? "Booked" : "No available slots left";
 
        try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/book-session`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/book-session`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

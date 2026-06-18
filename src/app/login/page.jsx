@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -8,9 +8,21 @@ import { FcGoogle } from "react-icons/fc";
 import { authClient } from "@/lib/auth-client";
 import { useSearchParams } from "next/navigation";
 import React from 'react';
-import { setAuthToken} from '@/lib/jwt-utils';
+import { setAuthToken } from '@/lib/jwt-utils';
 
 const LoginPage = () => {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <span className="loading loading-spinner loading-lg text-[#EC6530]"></span>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
+  );
+};
+
+const LoginForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
@@ -43,33 +55,33 @@ const LoginPage = () => {
       }
 
       try {
-        const loginRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+        const loginRes = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password }),
         });
 
         let jwtData;
-        
+
         if (loginRes.ok) {
           jwtData = await loginRes.json();
         } else {
-          const registerRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
+          const registerRes = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
+            body: JSON.stringify({
               name: email.split('@')[0],
-              email, 
-              password 
+              email,
+              password
             }),
           });
-          
+
           if (!registerRes.ok) {
             toast.success("Login successful!");
             router.push(redirect || "/");
             return;
           }
-          
+
           jwtData = await registerRes.json();
         }
 
@@ -82,7 +94,7 @@ const LoginPage = () => {
 
       toast.success("Login successful!");
       router.push(redirect || "/");
-      
+
     } catch (error) {
       toast.error("Something went wrong");
     } finally {
@@ -102,10 +114,10 @@ const LoginPage = () => {
         return;
       }
       const session = await authClient.getSession();
-      
+
       if (session.data) {
         const { user } = session.data;
-        const jwtResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/social-login`, {
+        const jwtResponse = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/social-login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -121,7 +133,6 @@ const LoginPage = () => {
           const jwtData = await jwtResponse.json();
           if (jwtData.token) {
             setAuthToken(jwtData.token);
-            setUserData(jwtData.user);
           }
         }
       }
@@ -133,10 +144,10 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-10" 
-         style={{ background: `linear-gradient(100deg, ${colors.sky}, ${colors.soft})` }}>
-      <div className="w-full max-w-md bg-white shadow-2xl rounded-2xl p-8 border-t-4" 
-           style={{ borderColor: colors.primary }}>
+    <div className="min-h-screen flex items-center justify-center px-4 py-10"
+      style={{ background: `linear-gradient(100deg, ${colors.sky}, ${colors.soft})` }}>
+      <div className="w-full max-w-md bg-white shadow-2xl rounded-2xl p-8 border-t-4"
+        style={{ borderColor: colors.primary }}>
         <h1 className="text-3xl font-bold text-center mb-6" style={{ color: colors.primary }}>
           User Login
         </h1>
@@ -158,9 +169,9 @@ const LoginPage = () => {
             </Link>
           </div>
 
-          <button type="submit" disabled={loading} 
-                  className="w-full py-2 rounded-lg font-semibold text-white transition" 
-                  style={{ backgroundColor: colors.primary }}>
+          <button type="submit" disabled={loading}
+            className="w-full py-2 rounded-lg font-semibold text-white transition"
+            style={{ backgroundColor: colors.primary }}>
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
@@ -171,8 +182,8 @@ const LoginPage = () => {
           <div className="flex-1 h-px bg-gray-300"></div>
         </div>
 
-        <button onClick={handleGoogle} 
-                className="w-full flex items-center justify-center gap-3 border rounded-lg py-2 hover:bg-gray-50 transition">
+        <button onClick={handleGoogle}
+          className="w-full flex items-center justify-center gap-3 border rounded-lg py-2 hover:bg-gray-50 transition">
           <FcGoogle size={20} /> Continue with Google
         </button>
 
@@ -186,5 +197,6 @@ const LoginPage = () => {
     </div>
   );
 };
+
 
 export default LoginPage;

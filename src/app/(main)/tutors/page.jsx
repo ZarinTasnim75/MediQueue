@@ -20,9 +20,9 @@ const TutorPage = async (props) => {
 
         let url;
         if (search && search.trim() !== "") {
-            url = `http://localhost:5000/tutor?search=${encodeURIComponent(search.trim())}`;
+            url = `${process.env.NEXT_PUBLIC_SERVER_URL}/tutor?search=${encodeURIComponent(search.trim())}`;
         } else {
-            url = 'http://localhost:5000/tutor';
+            url = `${process.env.NEXT_PUBLIC_SERVER_URL}/tutor`;
         }
         
         const res = await fetch(url, { cache: 'no-store' });

@@ -20,7 +20,7 @@ const CancelButton = ({ id, onCancel }) => {
         }
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/bookings/${id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/bookings/${id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",

@@ -26,7 +26,7 @@ const AddTutorPage = () => {
             tutor.totalSlot = Number(tutor.totalSlot);
             tutor.sessionDate = selectedDate.toISOString().split("T")[0];
 
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tutor`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/tutor`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

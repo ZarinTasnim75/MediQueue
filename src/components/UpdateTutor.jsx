@@ -38,7 +38,7 @@ const UpdateTutor = ({ tutor, onUpdate }) => {
 
         try {
             const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/tutors/${tutor._id}`,
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/tutors/${tutor._id}`,
                 {
                     method: "PATCH",
                     headers: {
