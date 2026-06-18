@@ -4,24 +4,57 @@ import { useState, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
 import DeleteTutor from "@/components/DeleteTutor";
 import UpdateTutor from "@/components/UpdateTutor";
+import { getAuthToken } from "@/lib/jwt-utils";
 
 const MyTutorsPage = () => {
-    const [tutors, setTutors] = useState([]);
+ const [tutors, setTutors] = useState([]);
     const [refreshKey, setRefreshKey] = useState(0);
     const [loading, setLoading] = useState(true);
     const { data: session } = authClient.useSession();
 
     useEffect(() => {
         const fetchTutors = async () => {
-            if (!session?.user?.email) return;
-
+            if (!session?.user?.email) {
+                setLoading(false);
+                return;
+            }
             setLoading(true);
 
-            const res = await fetch( `http://localhost:5000/my-tutors?email=${session.user.email}` );
+            try {
+                const token = getAuthToken();
+                if (!token) {
+                    setTutors([]);
+                    setLoading(false);
+                    return;
+                }
 
-            const data = await res.json();
-            setTutors(data);
-            setLoading(false);
+                const res = await fetch(
+                    `${process.env.NEXT_PUBLIC_API_URL}/my-tutors?email=${session.user.email}`,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json',
+                        },
+                        cache: "no-store",
+                    }
+                );
+
+                if (res.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
+
+                if (res.ok) {
+                    const data = await res.json();
+                    setTutors(Array.isArray(data) ? data : []);
+                } else {
+                    setTutors([]);
+                }
+            } catch (error) {
+                setTutors([]);
+            } finally {
+                setLoading(false);
+            }
         };
 
         fetchTutors();

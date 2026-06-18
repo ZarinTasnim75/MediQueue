@@ -33,13 +33,13 @@ const Footer = () => {
                             </li>
 
                             <li>
-                                <Link href="/my-booked-sessions" className="hover:text-[#EC6530] transition" >
+                                <Link href="/my-bookings" className="hover:text-[#EC6530] transition" >
                                     Learning Sessions
                                 </Link>
                             </li>
 
                             <li>
-                                <Link href="/resources" className="hover:text-[#EC6530] transition-colors" >
+                                <Link href="/" className="hover:text-[#EC6530] transition-colors" >
                                     Study Resources
                                 </Link>
                             </li>

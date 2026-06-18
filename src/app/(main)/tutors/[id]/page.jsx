@@ -1,19 +1,77 @@
 import Image from 'next/image';
-import { authClient } from "@/lib/auth-client";
 import React from 'react';
 import BookSection from '@/components/BookSection';
+import { headers, cookies } from "next/headers";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 const TutorDetailsPage = async ({ params }) => {
-const { data: session } = await authClient.getSession();
-const user = session?.user ?? null;
-    const { id } = await params
+    const { id } = await params;
 
-    const res = await fetch(`http://localhost:5000/tutors/${id}`)
-    const tutor = await res.json()
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
 
+    if (!session) {
+        redirect(`/login?redirect=/tutors/${id}`);
+    }
+    const user = session.user;
+    const cookieStore = await cookies();
+    const jwtToken = cookieStore.get('auth_token')?.value;
+
+    if (!jwtToken) {
+        const tokenResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/get-token`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: user.email,
+                sessionToken: session.session.token
+            }),
+        });
+
+        if (tokenResponse.ok) {
+            const data = await tokenResponse.json();
+            const newToken = data.token;
+
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tutors/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${newToken}`,
+                    'Content-Type': 'application/json',
+                },
+                cache: 'no-store',
+            });
+
+            if (!res.ok) throw new Error('Failed to fetch');
+            const tutor = await res.json();
+            return <TutorDisplay tutor={tutor} user={user} />;
+        }
+    }
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tutors/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${jwtToken}`,
+            'Content-Type': 'application/json',
+        },
+        cache: 'no-store',
+    });
+
+    if (res.status === 401) {
+        redirect('/login');
+    }
+
+    if (!res.ok) {
+        throw new Error(`Failed to fetch tutor: ${res.statusText}`);
+    }
+
+    const tutor = await res.json();
+
+    return <TutorDisplay tutor={tutor} user={user} />;
+};
+
+
+function TutorDisplay({ tutor, user }) {
     const today = new Date();
     const sessionDate = new Date(tutor.sessionDate);
-
     const noSlot = tutor.totalSlot <= 0;
     const bookingNotStarted = today < sessionDate;
 
@@ -30,7 +88,7 @@ const user = session?.user ?? null;
                             <div className="flex flex-col items-center">
 
                                 <div className="relative w-36 h-36 rounded-full overflow-hidden border-4 border-[#EC6530]">
-                                    <Image src={tutor.photo} alt={tutor.tutorName} fill className="object-cover" />
+                                    <Image src={tutor.photo || "/placeholder-avatar.png"} alt={tutor.tutorName || "Tutor"} fill className="object-cover" />
                                 </div>
 
                                 <h1 className="text-4xl font-bold mt-5 text-[#EC6530]">  {tutor.tutorName} </h1>
@@ -118,7 +176,7 @@ const user = session?.user ?? null;
 
                                 {!noSlot && !bookingNotStarted && (
                                     <div className="flex justify-center">
-                                          <BookSection tutor={tutor} user={user} />
+                                        <BookSection tutor={tutor} user={user} />
                                     </div>
                                 )}
                             </div>

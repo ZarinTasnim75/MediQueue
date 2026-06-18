@@ -2,12 +2,22 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { getAuthToken } from "@/lib/jwt-utils";
 
 const UpdateTutor = ({ tutor, onUpdate }) => {
     const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        const token = getAuthToken();
+        
+        if (!token) {
+            toast.error("Please login again to update tutor");
+            setLoading(false);
+            return;
+        }
 
         const form = e.target;
 
@@ -28,11 +38,12 @@ const UpdateTutor = ({ tutor, onUpdate }) => {
 
         try {
             const res = await fetch(
-                `http://localhost:5000/tutors/${tutor._id}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/tutors/${tutor._id}`,
                 {
                     method: "PATCH",
                     headers: {
-                        "content-type": "application/json",
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
                     },
                     body: JSON.stringify(updatedTutor),
                 }
@@ -46,10 +57,13 @@ const UpdateTutor = ({ tutor, onUpdate }) => {
                     onUpdate();
                 }
             } else {
-                toast.error("Update failed");
+                const data = await res.json().catch(() => ({}));
+                toast.error(data.message || "Update failed");
             }
         } catch (error) {
             toast.error("Server error");
+        } finally {
+            setLoading(false);
         }
     };
 

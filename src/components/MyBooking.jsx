@@ -3,29 +3,63 @@
 import { useEffect, useState } from "react";
 import CancelButton from "@/components/CancelButton";
 import { authClient } from "@/lib/auth-client";
+import { getAuthToken } from "@/lib/jwt-utils";
 
 export default function MyBooking() {
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refreshKey, setRefreshKey] = useState(0);
+    const [error, setError] = useState(null);
 
     const { data: session } = authClient.useSession();
 
     useEffect(() => {
         const fetchBookings = async () => {
-            if (!session?.user?.email) return;
-
+            if (!session?.user?.email) {
+                setLoading(false);
+                return;
+            }
             setLoading(true);
+            setError(null);
 
-            const res = await fetch(
-                `http://localhost:5000/bookings?email=${session.user.email}`,
-                { cache: "no-store" }
-            );
+            try {
+                const token = getAuthToken();
 
-            const data = await res.json();
+                if (!token) {
+                    setError("Please login again");
+                    setBookings([]);
+                    setLoading(false);
+                    return;
+                }
 
-            setBookings(data);
-            setLoading(false);
+                const url = `${process.env.NEXT_PUBLIC_API_URL}/bookings?email=${session.user.email}`;
+                const res = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    cache: "no-store",
+                });
+
+                if (res.status === 401) {
+                    setError("Session expired. Please login again.");
+                    setBookings([]);
+                    return;
+                }
+
+                const data = await res.json();
+                
+                if (Array.isArray(data)) {
+                    setBookings(data);
+                } else {
+                    setBookings([]);
+                }
+            } catch (error) {
+                setError("Failed to fetch bookings");
+                setBookings([]);
+            } finally {
+                setLoading(false);
+            }
         };
 
         fetchBookings();

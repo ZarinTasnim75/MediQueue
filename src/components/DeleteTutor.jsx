@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { getAuthToken } from "@/lib/jwt-utils";
 
 const DeleteTutor = ({ id, onDelete }) => {
     const [open, setOpen] = useState(false);
@@ -9,10 +10,22 @@ const DeleteTutor = ({ id, onDelete }) => {
 
     const handleDelete = async () => {
         setLoading(true);
+        const token = getAuthToken();
+        
+        if (!token) {
+            toast.error("Please login again to delete tutor");
+            setOpen(false);
+            setLoading(false);
+            return;
+        }
 
         try {
-            const res = await fetch(`http://localhost:5000/tutors/${id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tutors/${id}`, {
                 method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`, 
+                },
             });
 
             if (res.ok) {
@@ -20,7 +33,8 @@ const DeleteTutor = ({ id, onDelete }) => {
                 setOpen(false);
                 onDelete?.();
             } else {
-                toast.error("Delete failed");
+                const data = await res.json().catch(() => ({}));
+                toast.error(data.message || "Delete failed");
             }
         } catch (error) {
             toast.error("Server error");

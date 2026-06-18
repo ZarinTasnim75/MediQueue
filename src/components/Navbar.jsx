@@ -3,22 +3,37 @@
 import toast from "react-hot-toast";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
-import { FaBars } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaBars, FaMoon, FaSun } from "react-icons/fa";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
 const Navbar = () => {
     const router = useRouter();
     const { data: session, isPending } = authClient.useSession();
+    const [theme, setTheme] = useState("light");
+
+    useEffect(() => {
+        const saved = localStorage.getItem("theme") || "light";
+        setTheme(saved);
+        document.documentElement.setAttribute("data-theme", saved);
+    }, []);
+
+    const toggleTheme = () => {
+        const newTheme = theme === "light" ? "dark" : "light";
+        setTheme(newTheme);
+
+        localStorage.setItem("theme", newTheme);
+        document.documentElement.setAttribute("data-theme", newTheme);
+    };
 
     if (isPending) {
-    return (
-        <div className="navbar bg-[#FFE3E3] shadow-md px-4 flex justify-center items-center h-16">
-            <span className="loading loading-spinner loading-md text-[#EC6530]"></span>
-        </div>
-    );
-}
+        return (
+            <div className="navbar bg-[#FFE3E3] shadow-md px-4 flex justify-center items-center h-16">
+                <span className="loading loading-spinner loading-md text-[#EC6530]"></span>
+            </div>
+        );
+    }
     const user = session?.user;
 
     const navLinks = (
@@ -65,6 +80,13 @@ const Navbar = () => {
                 </div>
 
                 <div className="navbar-end gap-2">
+                    <button onClick={toggleTheme} className="btn btn-sm bg-[#8FDDDF] border-none" >
+                        {theme === "light" ? (
+                            <FaMoon size={16} />
+                        ) : (
+                            <FaSun size={16} />
+                        )}
+                    </button>
                     {!user ? (
                         <>
                             <Link href="/login" className="btn hover:scale-105" style={{

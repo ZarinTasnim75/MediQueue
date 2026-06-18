@@ -1,4 +1,5 @@
 import Banner from "@/components/Banner";
+import ExtraSection from "@/components/ExtraSection";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -9,7 +10,6 @@ async function getTutors() {
     cache: "no-store",
   }
 );
-
   const data = await res.json();
   return data;
 }
@@ -20,7 +20,7 @@ const HomePage = async () => {
     <div>
       <Banner></Banner>
       <div className="p-10 bg-gradient-to-b from-[#8FDDDF]/20 to-[#FFE3E3]/30">
-        <h2 className="text-4xl font-bold text-center text-[#EC6530] mb-8"> {" "} AVAILABLE TUTORS {" "} </h2>
+        <h2 className="text-4xl font-bold text-center text-[#EC6530] mb-8"> {" "} OUR TUTORS {" "} </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {tutors.map((tutor) => (
@@ -62,6 +62,7 @@ const HomePage = async () => {
           ))}
         </div>
       </div>
+      <ExtraSection></ExtraSection>
     </div>
   );
 };

@@ -3,6 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { getAuthToken } from "@/lib/jwt-utils";
 
 const BookModal = ({ tutor, user, isOpen, onClose }) => {
     const router = useRouter();
@@ -11,21 +12,30 @@ const BookModal = ({ tutor, user, isOpen, onClose }) => {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        console.log("Form submitted");
+        const token = getAuthToken();
+        
+        if (!token) {
+            toast.error("Please login to book a session");
+            return;
+        }
 
         const formData = new FormData(e.currentTarget);
 
         const bookingData = Object.fromEntries(formData.entries());
+        bookingData.tutorId = tutor._id;
+        bookingData.tutorName = tutor.tutorName;
+        bookingData.studentEmail = user?.email;
         bookingData.bookStatus = tutor.totalSlot > 0 ? "Booked" : "No available slots left";
-        console.log("Booking Data:", bookingData);
 
-        try {
-            const res = await fetch("http://localhost:5000/book-session",
-                {
-                    method: "POST",
-                    headers: { "content-type": "application/json" },
-                    body: JSON.stringify(bookingData),
-                });
+       try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/book-session`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`, // ✅ ADD JWT TOKEN
+                },
+                body: JSON.stringify(bookingData),
+            });
 
             const data = await res.json().catch(() => ({ message: "Server error" }));
 
@@ -37,7 +47,6 @@ const BookModal = ({ tutor, user, isOpen, onClose }) => {
                 toast.error(data.message);
             }
         } catch (error) {
-            console.error(error);
             toast.error("Booking Failed");
         }
     };
@@ -87,12 +96,7 @@ const BookModal = ({ tutor, user, isOpen, onClose }) => {
                         <label className="block text-left font-medium mb-1">
                             <span className="label-text">Book Status</span>
                         </label>
-                        <input
-                            name="bookStatus"
-                            type="text"
-                            className="input input-bordered w-full"
-                            defaultValue={tutor.totalSlot > 0 ? "Booking available" : "No available slots left"}
-                            readOnly
+                        <input name="bookStatus" type="text" className="input input-bordered w-full" defaultValue={tutor.totalSlot > 0 ? "Booking available" : "No available slots left"} readOnly
                         />
                     </div>
 

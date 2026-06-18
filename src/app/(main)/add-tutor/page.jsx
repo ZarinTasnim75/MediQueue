@@ -8,46 +8,47 @@ import { FaCalendarAlt } from "react-icons/fa";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
+import { getAuthToken } from "@/lib/jwt-utils";
 
 const AddTutorPage = () => {
 
     const { data: session } = authClient.useSession();
 
     const onSubmit = async (e) => {
-    e.preventDefault();
+        e.preventDefault();
+        const token = getAuthToken();
 
-    try {
-        const formData = new FormData(e.currentTarget);
+        try {
+            const formData = new FormData(e.currentTarget);
+            const tutor = Object.fromEntries(formData.entries());
+            tutor.email = session?.user?.email;
+            tutor.hourlyFee = Number(tutor.hourlyFee);
+            tutor.totalSlot = Number(tutor.totalSlot);
+            tutor.sessionDate = selectedDate.toISOString().split("T")[0];
 
-        const tutor = Object.fromEntries(formData.entries());
-        tutor.email = session?.user?.email;
-        tutor.hourlyFee = Number(tutor.hourlyFee);
-        tutor.totalSlot = Number(tutor.totalSlot);
-        tutor.sessionDate = selectedDate.toISOString().split("T")[0];
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tutor`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`, 
+                },
+                body: JSON.stringify(tutor),
+            });
 
-        const res = await fetch("http://localhost:5000/tutor", {
-            method: "POST",
-            headers: {
-                "content-type": "application/json",
-            },
-            body: JSON.stringify(tutor),
-        });
+            const data = await res.json();
 
-        const data = await res.json();
-
-        if (res.ok) {
-            toast.success("Tutor added successfully!");
-
-            e.target.reset();
-            setSelectedDate(new Date());
-        } else {
-            toast.error(data.message || "Failed to add tutor");
+            if (res.ok) {
+                toast.success("Tutor added successfully!");
+                e.target.reset();
+                setSelectedDate(new Date());
+            } else {
+                toast.error(data.message || data.error || "Failed to add tutor");
+            }
+        } catch (error) {
+            toast.error("Something went wrong!");
+            console.error(error);
         }
-    } catch (error) {
-        toast.error("Something went wrong!");
-        console.error(error);
-    }
-};
+    };
 
     const [selectedDate, setSelectedDate] = useState(new Date());
     return (
@@ -137,7 +138,7 @@ const AddTutorPage = () => {
                         </div>
 
                         <fieldset className="fieldset">
-                            <label className="label text-white font-bold text-xl"> Experience</label>
+                            <label className="label text-white font-bold text-xl"> Institution & Experience</label>
                             <textarea name="experience" rows="5" className="textarea textarea-bordered text-black"
                                 placeholder="Example: Your education and experience" required ></textarea>
                         </fieldset>

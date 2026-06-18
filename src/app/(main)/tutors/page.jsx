@@ -1,10 +1,50 @@
 import Image from 'next/image';
 import React from 'react';
 import Button from '../../../components/Button';
+import Search from '@/components/Search';
+import Link from 'next/link';
 
-const TutorPage = async () => {
-    const res = await fetch('http://localhost:5000/tutor')
-    const tutors = await res.json()
+const TutorPage = async (props) => {
+    const searchParams = await props.searchParams;
+    const search = searchParams?.search || "";
+    const startDate = searchParams?.startDate || "";
+    const endDate = searchParams?.endDate || "";
+
+    let tutors = [];
+    
+    try {
+        const params = new URLSearchParams();
+        if (search) params.append('search', search);
+        if (startDate) params.append('startDate', startDate);
+        if (endDate) params.append('endDate', endDate);
+
+        let url;
+        if (search && search.trim() !== "") {
+            url = `http://localhost:5000/tutor?search=${encodeURIComponent(search.trim())}`;
+        } else {
+            url = 'http://localhost:5000/tutor';
+        }
+        
+        const res = await fetch(url, { cache: 'no-store' });
+        
+        if (res.ok) {
+            const data = await res.json();
+            tutors = Array.isArray(data) ? data : [];
+        }
+    } catch (error) {
+        tutors = [];
+    }
+
+    if (tutors.length === 0) {
+        return (
+            <div className="min-h-screen bg-gradient-to-b from-[#8FDDDF]/20 via-white to-[#FFE3E3]/40 flex items-center justify-center">
+                <div className="text-center">
+                    <h1 className="text-3xl font-bold text-gray-500">No tutors available</h1>
+                    <p className="text-gray-400 mt-2">Check back later for new tutors</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-[#8FDDDF]/20 via-white to-[#FFE3E3]/40">
@@ -20,6 +60,31 @@ const TutorPage = async () => {
                 </div>
                 <div className="diff-resizer w-30"></div>
             </figure>
+
+            <Search initialSearch={search} initialStartDate={startDate} initialEndDate={endDate}/>
+
+            <div className="text-center mb-6">
+                <p className="text-gray-600">
+                    {tutors.length} tutor{tutors.length !== 1 ? 's' : ''} found
+                    {search && ` for "${search}"`}
+                </p>
+            </div>
+
+            {tutors.length === 0 ? (
+                <div className="text-center py-20">
+                    <h2 className="text-2xl font-bold text-gray-500">No tutors available</h2>
+                    <p className="text-gray-400 mt-2">
+                        {search 
+                            ? `No tutors matching "${search}"`
+                            : "Check back later for new tutors"}
+                    </p>
+                    {(search || startDate || endDate) && (
+                        <Link   href="/tutors"  className="btn bg-[#EC6530] text-white mt-4 inline-block" >
+                            Clear Filters
+                        </Link>
+                    )}
+                </div>
+            ) : (
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10 justify-items-center py-12">
                 {tutors.map((tutor) => (
@@ -79,6 +144,7 @@ const TutorPage = async () => {
                     </div>
                 ))}
             </div>
+               )}
         </div>
     );
 };

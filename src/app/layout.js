@@ -22,9 +22,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`} >
-      <body className="min-h-full">
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`} >
+      <body className= {`theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black`}>
         <div className="flex">
           <div className="fixed left-0 top-0 h-screen w-9.5 z-50">
             <Image src="/assets/ruler.png" alt="ruler"  width={100} height={500} className="h-screen w-full object-cover" priority />

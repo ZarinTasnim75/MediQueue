@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth";
+import { jwt } from "better-auth/plugins"
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 
@@ -7,7 +8,6 @@ const db = client.db("mediqueue");
 
 export const auth = betterAuth({
   database: mongodbAdapter(db, {
-    // Optional: if you don't provide a client, database transactions won't be enabled.
     client
   }),
   emailAndPassword: {
@@ -19,4 +19,19 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     },
   },
+  session: {
+    cookieCache:{
+      enabled: true,
+      strategy: "jwt",
+      maxAge: 7 * 24 * 60 * 60, 
+    }
+  },
+  plugins: [
+       jwt({
+            jwt: {
+                expirationTime: "1h", 
+            },
+              secret: process.env.BETTER_AUTH_SECRET,
+        }), 
+    ]
 });
