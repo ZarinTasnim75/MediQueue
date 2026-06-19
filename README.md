@@ -1,6 +1,6 @@
 # MediQueue - Tutor Booking Platform
 
-### Live Site: 
+### Live Site: https://mediqueue-lake.vercel.app
 
 ## Project Overview
 
