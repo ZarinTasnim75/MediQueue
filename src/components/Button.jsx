@@ -9,11 +9,6 @@ const Button = ({ tutorId }) => {
     const { data: session } = authClient.useSession();
 
     const handleClick = () => {
-        if (!session?.user) {
-            router.push(`/login?redirect=/tutors/${tutorId}`);
-            return;
-        }
-
         router.push(`/tutors/${tutorId}`);
     };
 

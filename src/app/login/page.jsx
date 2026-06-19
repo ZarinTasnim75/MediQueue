@@ -9,6 +9,7 @@ import { authClient } from "@/lib/auth-client";
 import { useSearchParams } from "next/navigation";
 import React from 'react';
 import { setAuthToken } from '@/lib/jwt-utils';
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const LoginPage = () => {
   return (
@@ -27,6 +28,7 @@ const LoginForm = () => {
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const colors = {
     primary: "#EC6530",
@@ -34,6 +36,10 @@ const LoginForm = () => {
     soft: "#FFE3E3",
     sky: "#b7e9ea",
   };
+
+  if (redirect) {
+    localStorage.setItem("login_redirect", redirect);
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -44,16 +50,14 @@ const LoginForm = () => {
 
     try {
       setLoading(true);
-      const res = await authClient.signIn.email({
-        email,
-        password,
-      });
+
+      const res = await authClient.signIn.email({ email, password });
 
       if (res.error) {
         toast.error(res.error.message || "Invalid credentials");
+        setLoading(false);
         return;
       }
-
       try {
         const loginRes = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/login`, {
           method: 'POST',
@@ -61,39 +65,34 @@ const LoginForm = () => {
           body: JSON.stringify({ email, password }),
         });
 
-        let jwtData;
-
         if (loginRes.ok) {
-          jwtData = await loginRes.json();
+          const jwtData = await loginRes.json();
+          if (jwtData.token) {
+            setAuthToken(jwtData.token);
+          }
         } else {
           const registerRes = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name: email.split('@')[0],
-              email,
-              password
-            }),
+            body: JSON.stringify({ name: email.split('@')[0], email, password }),
           });
 
-          if (!registerRes.ok) {
-            toast.success("Login successful!");
-            router.push(redirect || "/");
-            return;
+          if (registerRes.ok) {
+            const jwtData = await registerRes.json();
+            if (jwtData.token) {
+              setAuthToken(jwtData.token);
+            }
           }
-
-          jwtData = await registerRes.json();
-        }
-
-        if (jwtData.token) {
-          setAuthToken(jwtData.token);
         }
       } catch (error) {
-        console.error("JWT token fetch error:", error);
+        console.error("JWT error:", error);
       }
 
       toast.success("Login successful!");
-      router.push(redirect || "/");
+
+      const targetUrl = redirect || localStorage.getItem("login_redirect") || "/";
+      localStorage.removeItem("login_redirect");
+      router.replace(targetUrl);
 
     } catch (error) {
       toast.error("Something went wrong");
@@ -113,10 +112,12 @@ const LoginForm = () => {
         toast.error(res.error.message || "Google login failed");
         return;
       }
+
       const session = await authClient.getSession();
 
       if (session.data) {
         const { user } = session.data;
+
         const jwtResponse = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/social-login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -129,6 +130,11 @@ const LoginForm = () => {
           }),
         });
 
+        if (!jwtResponse.ok) {
+          console.error("Fetch failed:", jwtResponse.status);
+          return [];
+        }
+
         if (jwtResponse.ok) {
           const jwtData = await jwtResponse.json();
           if (jwtData.token) {
@@ -137,11 +143,20 @@ const LoginForm = () => {
         }
       }
 
-      toast.success("Redirecting...");
+      toast.success("Login successful!");
+      console.log("Redirect to:", redirect || "/");
+
+      if (redirect) {
+        router.replace(redirect);
+      } else {
+        router.replace("/");
+      }
+
     } catch (error) {
       toast.error("Google login failed");
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-10"
@@ -160,7 +175,12 @@ const LoginForm = () => {
 
           <div>
             <label className="text-sm font-semibold text-gray-700">Password</label>
-            <input name="password" type="password" required className="input input-bordered w-full mt-1" />
+            <div className="relative">
+              <input name="password" type={showPassword ? "text" : "password"} required className="input input-bordered w-full mt-1 pr-10" />
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700" >
+                {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+              </button>
+            </div>
           </div>
 
           <div className="text-right">

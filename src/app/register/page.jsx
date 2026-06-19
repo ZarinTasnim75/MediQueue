@@ -5,10 +5,13 @@ import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Link from "next/link";
 
 export default function RegisterPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const colors = {
     primary: "#EC6530",
@@ -90,7 +93,7 @@ export default function RegisterPage() {
         <form onSubmit={handleRegister} className="space-y-4">
           <div>
             <label className="text-sm font-semibold text-gray-700"> Name </label>
-            <input name="name" type="text" className="input input-bordered w-full mt-1" required/>
+            <input name="name" type="text" className="input input-bordered w-full mt-1" required />
           </div>
 
           <div>
@@ -100,13 +103,27 @@ export default function RegisterPage() {
 
           <div>
             <label className="text-sm font-semibold text-gray-700"> Photo URL</label>
-            <input name="photo" type="text" className="input input-bordered w-full mt-1" required/>
+            <input name="photo" type="text" className="input input-bordered w-full mt-1" required />
           </div>
 
           <div>
-            <label className="text-sm font-semibold text-gray-700"> Password </label>
-            <input name="password" type="password" className="input input-bordered w-full mt-1" required />
-            <p className="text-xs text-gray-500 mt-1"> Must contain uppercase, lowercase & 8+ characters </p>
+            <label className="text-sm font-semibold text-gray-700">Password</label>
+            <div className="relative">
+              <input
+                name="password"
+                type={showPassword ? "text" : "password"}
+                className="input input-bordered w-full mt-1 pr-10"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              >
+                {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+              </button>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">Must contain uppercase, lowercase & 8+ characters</p>
           </div>
 
           <button type="submit" disabled={loading} className="w-full py-2 rounded-lg font-semibold text-white transition" style={{ backgroundColor: colors.primary }} > {loading ? "Registering..." : "Register"}
@@ -120,7 +137,7 @@ export default function RegisterPage() {
         </div>
 
         <button onClick={handleGoogle} className="w-full flex items-center justify-center gap-3 border rounded-lg py-2 hover:bg-gray-50 transition" > <FcGoogle size={20} /> Continue with Google</button>
-        <p className="text-center text-sm mt-4"> Already have an account?{" "} <a href="/login" className="font-semibold" style={{ color: colors.primary }} > Login</a> </p>
+        <p className="text-center text-sm mt-4"> Already have an account?{" "} <Link href="/login" className="font-semibold" style={{ color: colors.primary }} > Login</Link> </p>
       </div>
     </div>
   );

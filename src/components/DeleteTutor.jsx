@@ -11,7 +11,7 @@ const DeleteTutor = ({ id, onDelete }) => {
     const handleDelete = async () => {
         setLoading(true);
         const token = getAuthToken();
-        
+
         if (!token) {
             toast.error("Please login again to delete tutor");
             setOpen(false);
@@ -24,9 +24,14 @@ const DeleteTutor = ({ id, onDelete }) => {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`, 
+                    "Authorization": `Bearer ${token}`,
                 },
             });
+
+            if (!res.ok) {
+                console.error("Fetch failed:", res.status);
+                return [];
+            }
 
             if (res.ok) {
                 toast.success("Tutor deleted successfully");
@@ -59,7 +64,7 @@ const DeleteTutor = ({ id, onDelete }) => {
                             <button onClick={() => setOpen(false)} className="btn btn-sm" > Cancel </button>
 
                             <button onClick={handleDelete} className="btn btn-error btn-sm" disabled={loading}>
-                             {loading ? (
+                                {loading ? (
                                     <span className="loading loading-spinner loading-sm"></span>
                                 ) : (
                                     "Yes Delete"

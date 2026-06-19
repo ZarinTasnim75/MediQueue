@@ -30,10 +30,15 @@ const AddTutorPage = () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`, 
+                    "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify(tutor),
             });
+
+            if (!res.ok) {
+                console.error("Fetch failed:", res.status);
+                return [];
+            }
 
             const data = await res.json();
 
@@ -97,15 +102,32 @@ const AddTutorPage = () => {
                                     <option>Both</option>
                                 </select>
                             </fieldset>
-
+                            
                             <fieldset className="fieldset">
-                                <label className="label  text-white font-semibold text-xl">Available Days</label>
-                                <input type="text" name="availableDays" placeholder="Sun - Thu" className="input input-bordered  text-black" required />
+                                <label className="label text-white font-semibold text-xl">Available Days</label>
+                                <select name="availableDays" className="select select-bordered text-black" required>
+                                    <option value="">Select Days</option>
+                                    <option>Sun - Thu</option>
+                                    <option>Mon - Fri</option>
+                                    <option>Mon - Thu</option>
+                                    <option>Wed - Sat</option>
+                                    <option>Fri - Sun</option>
+                                    <option>Sat - Thu</option>
+                                </select>
                             </fieldset>
 
                             <fieldset className="fieldset">
-                                <label className="label  text-white font-semibold text-xl">Available Time Slot</label>
-                                <input type="text" name="availableTime" placeholder="5:00 PM - 8:00 PM" className="input input-bordered text-black" required />
+                                <label className="label text-white font-semibold text-xl">Available Time Slot</label>
+                                <select name="availableTime" className="select select-bordered text-black" required>
+                                    <option value="">Select Time</option>
+                                    <option>3:00 PM - 5:00 PM</option>
+                                    <option>5:00 PM - 7:00 PM</option>
+                                    <option>7:00 PM - 9:00 PM</option>
+                                    <option>9:00 PM - 11:00 PM</option>
+                                    <option>8:00 AM - 10:00 AM</option>
+                                    <option>10:00 AM - 12:00 PM</option>
+                                    <option>12:00 PM - 2:00 PM</option>
+                                </select>
                             </fieldset>
 
                             <fieldset className="fieldset">

@@ -12,7 +12,7 @@ const UpdateTutor = ({ tutor, onUpdate }) => {
         e.preventDefault();
         setLoading(true);
         const token = getAuthToken();
-        
+
         if (!token) {
             toast.error("Please login again to update tutor");
             setLoading(false);
@@ -48,6 +48,11 @@ const UpdateTutor = ({ tutor, onUpdate }) => {
                     body: JSON.stringify(updatedTutor),
                 }
             );
+
+            if (!res.ok) {
+                console.error("Fetch failed:", res.status);
+                return [];
+            }
 
             if (res.ok) {
                 toast.success("Tutor updated successfully");
@@ -85,10 +90,25 @@ const UpdateTutor = ({ tutor, onUpdate }) => {
                             <input name="photo" defaultValue={tutor.photo} className="input input-bordered w-full" />
 
                             <label className="font-semibold">Subject</label>
-                            <input name="subject" defaultValue={tutor.subject} className="input input-bordered w-full" />
+                            <select name="subject" defaultValue={tutor.subject} className="select select-bordered w-full">
+                                <option value="">Select Subject</option>
+                                <option>Mathematics</option>
+                                <option>Physics</option>
+                                <option>Chemistry</option>
+                                <option>Biology</option>
+                                <option>English</option>
+                                <option>ICT</option>
+                                <option>Economics</option>
+                                <option>Accounting</option>
+                            </select>
 
                             <label className="font-semibold">Teaching Mode</label>
-                            <input name="teachingMode" defaultValue={tutor.teachingMode} className="input input-bordered w-full" />
+                            <select name="teachingMode" defaultValue={tutor.teachingMode} className="select select-bordered w-full">
+                                <option value="">Select Mode</option>
+                                <option>Online</option>
+                                <option>Offline</option>
+                                <option>Both</option>
+                            </select>
 
                             <label className="font-semibold">Hourly Fee</label>
                             <input name="hourlyFee" defaultValue={tutor.hourlyFee} className="input input-bordered w-full" />
@@ -97,10 +117,27 @@ const UpdateTutor = ({ tutor, onUpdate }) => {
                             <input name="location" defaultValue={tutor.location} className="input input-bordered w-full" />
 
                             <label className="font-semibold">Available Days</label>
-                            <input name="availableDays" defaultValue={tutor.availableDays} className="input input-bordered w-full" />
+                            <select name="availableDays" defaultValue={tutor.availableDays} className="select select-bordered w-full">
+                                <option value="">Select Days</option>
+                                <option>Sun - Thu</option>
+                                <option>Mon - Fri</option>
+                                <option>Mon - Thu</option>
+                                <option>Wed - Sat</option>
+                                <option>Fri - Sun</option>
+                                <option>Sat - Thu</option>
+                            </select>
 
                             <label className="font-semibold">Available Time</label>
-                            <input name="availableTime" defaultValue={tutor.availableTime} className="input input-bordered w-full" />
+                            <select name="availableTime" defaultValue={tutor.availableTime} className="select select-bordered w-full">
+                                <option value="">Select Time</option>
+                                <option>3:00 PM - 5:00 PM</option>
+                                <option>5:00 PM - 7:00 PM</option>
+                                <option>7:00 PM - 9:00 PM</option>
+                                <option>9:00 PM - 11:00 PM</option>
+                                <option>8:00 AM - 10:00 AM</option>
+                                <option>10:00 AM - 12:00 PM</option>
+                                <option>12:00 PM - 2:00 PM</option>
+                            </select>
 
                             <label className="font-semibold">Total Slots</label>
                             <input name="totalSlot" defaultValue={tutor.totalSlot} className="input input-bordered w-full" />

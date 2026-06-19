@@ -11,7 +11,7 @@ const CancelButton = ({ id, onCancel }) => {
     const handleCancel = async () => {
         setLoading(true);
         const token = getAuthToken();
-        
+
         if (!token) {
             toast.error("Please login again to cancel booking");
             setOpen(false);
@@ -24,9 +24,14 @@ const CancelButton = ({ id, onCancel }) => {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`, 
+                    "Authorization": `Bearer ${token}`,
                 },
             });
+
+            if (!res.ok) {
+                console.error("Fetch failed:", res.status);
+                return [];
+            }
 
             const data = await res.json().catch(() => null);
 
@@ -58,10 +63,10 @@ const CancelButton = ({ id, onCancel }) => {
                         <p className="text-sm text-gray-500">This action cannot be undone.</p>
 
                         <div className="flex justify-center gap-3">
-                            <button  onClick={() => setOpen(false)}  className="btn btn-sm" disabled={loading} >
+                            <button onClick={() => setOpen(false)} className="btn btn-sm" disabled={loading} >
                                 No
                             </button>
-                            <button  onClick={handleCancel}  className="btn btn-error btn-sm" disabled={loading} >
+                            <button onClick={handleCancel} className="btn btn-error btn-sm" disabled={loading} >
                                 {loading ? "Cancelling..." : "Yes, Cancel"}
                             </button>
                         </div>

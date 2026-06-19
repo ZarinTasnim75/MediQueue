@@ -41,7 +41,10 @@ const TutorDetailsPage = async ({ params }) => {
                 cache: 'no-store',
             });
 
-            if (!res.ok) throw new Error('Failed to fetch');
+            if (!res.ok) {
+                console.error("Fetch failed:", res.status);
+                return [];
+            }
             const tutor = await res.json();
             return <TutorDisplay tutor={tutor} user={user} />;
         }
@@ -60,9 +63,9 @@ const TutorDetailsPage = async ({ params }) => {
     }
 
     if (!res.ok) {
-        throw new Error(`Failed to fetch tutor: ${res.statusText}`);
+        console.error("Fetch failed:", res.status);
+        return [];
     }
-
     const tutor = await res.json();
 
     return <TutorDisplay tutor={tutor} user={user} />;

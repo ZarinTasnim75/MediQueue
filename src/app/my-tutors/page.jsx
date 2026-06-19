@@ -7,7 +7,7 @@ import UpdateTutor from "@/components/UpdateTutor";
 import { getAuthToken } from "@/lib/jwt-utils";
 
 const MyTutorsPage = () => {
- const [tutors, setTutors] = useState([]);
+    const [tutors, setTutors] = useState([]);
     const [refreshKey, setRefreshKey] = useState(0);
     const [loading, setLoading] = useState(true);
     const { data: session } = authClient.useSession();
@@ -38,6 +38,11 @@ const MyTutorsPage = () => {
                         cache: "no-store",
                     }
                 );
+
+                if (!res.ok) {
+                    console.error("Fetch failed:", res.status);
+                    return [];
+                }
 
                 if (res.status === 401) {
                     window.location.href = '/login';
@@ -94,7 +99,7 @@ const MyTutorsPage = () => {
                                     <td>${tutor.hourlyFee}</td>
 
                                     <td className="space-x-2">
-                                        <UpdateTutor  tutor={tutor} onUpdate={() => setRefreshKey((prev) => prev + 1) } />
+                                        <UpdateTutor tutor={tutor} onUpdate={() => setRefreshKey((prev) => prev + 1)} />
                                         <DeleteTutor id={tutor._id} onDelete={() => setRefreshKey((prev) => prev + 1)} />
                                     </td>
                                 </tr>

@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import { FaBars, FaMoon, FaSun } from "react-icons/fa";
+import { FaBars, FaMoon, FaSun, FaTimes } from "react-icons/fa";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
@@ -12,6 +12,7 @@ const Navbar = () => {
     const router = useRouter();
     const { data: session, isPending } = authClient.useSession();
     const [theme, setTheme] = useState("light");
+    const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
         const saved = localStorage.getItem("theme") || "light";
@@ -67,9 +68,15 @@ const Navbar = () => {
             <div className="navbar bg-base-100 shadow-md px-4" style={{ backgroundColor: "#FFE3E3" }}>
 
                 <div className="navbar-start">
-                    <div className="dropdown"><button className="btn btn-ghost lg:hidden"> <FaBars size={18} /> </button>
-
-                        <ul className="menu dropdown-content mt-3 z-50 bg-red-100 border border-red-900 rounded-box w-50">  {navLinks} </ul>
+                    <div className="dropdown">
+                        <button onClick={() => setMenuOpen(!menuOpen)} className="btn btn-ghost lg:hidden btn-sm">
+                            {menuOpen ? <FaTimes size={18} /> : <FaBars size={18} />}
+                        </button>
+                        {menuOpen && (
+                            <ul className="menu dropdown-content mt-3 z-50 bg-red-100 border border-red-900 rounded-box w-52 absolute top-full left-0 shadow-lg">
+                                {navLinks}
+                            </ul>
+                        )}
                     </div>
 
                     <Link href="/" className="btn btn-ghost text-xl font-bold text-primary" style={{ color: "#EC6530" }}>MediQueue</Link>
@@ -89,16 +96,18 @@ const Navbar = () => {
                     </button>
                     {!user ? (
                         <>
-                            <Link href="/login" className="btn hover:scale-105" style={{
-                                backgroundColor: "#FFAE6E",
-                                border: "none",
-                                color: "black",
-                            }} >Login</Link>
-                            <Link href="/register" className="btn hover:scale-105 " style={{
-                                backgroundColor: "#EC6530",
-                                border: "none",
-                                color: "white",
-                            }} >Register</Link>
+                            <div className="flex gap-1">
+                                <Link href="/login" className="btn hover:scale-105" style={{
+                                    backgroundColor: "#FFAE6E",
+                                    border: "none",
+                                    color: "black",
+                                }} >Login</Link>
+                                <Link href="/register" className="btn hover:scale-105 " style={{
+                                    backgroundColor: "#EC6530",
+                                    border: "none",
+                                    color: "white",
+                                }} >Register</Link>
+                            </div>
                         </>
                     ) : (
                         <div className="dropdown dropdown-end">
@@ -110,7 +119,7 @@ const Navbar = () => {
 
                             <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box border border-red-900 z-50 mt-3 w-52 p-2" style={{ backgroundColor: "#FFE3E3" }}>
                                 <li><span className="font-semibold">Hello! {user.name}</span></li>
-                                <li><Link href="/profile">Profile</Link></li>
+                                <li><Link href="/">Profile</Link></li>
                                 <li><button onClick={handleLogout}>Logout</button></li>
                             </ul>
                         </div>

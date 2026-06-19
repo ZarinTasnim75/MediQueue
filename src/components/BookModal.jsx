@@ -13,7 +13,7 @@ const BookModal = ({ tutor, user, isOpen, onClose }) => {
     const onSubmit = async (e) => {
         e.preventDefault();
         const token = getAuthToken();
-        
+
         if (!token) {
             toast.error("Please login to book a session");
             return;
@@ -27,15 +27,20 @@ const BookModal = ({ tutor, user, isOpen, onClose }) => {
         bookingData.studentEmail = user?.email;
         bookingData.bookStatus = tutor.totalSlot > 0 ? "Booked" : "No available slots left";
 
-       try {
+        try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/book-session`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`, // ✅ ADD JWT TOKEN
+                    "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify(bookingData),
             });
+
+            if (!res.ok) {
+                console.error("Fetch failed:", res.status);
+                return [];
+            }
 
             const data = await res.json().catch(() => ({ message: "Server error" }));
 

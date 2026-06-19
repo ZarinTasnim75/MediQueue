@@ -41,6 +41,11 @@ export default function MyBooking() {
                     cache: "no-store",
                 });
 
+                if (!res.ok) {
+                    console.error("Fetch failed:", res.status);
+                    return [];
+                }
+
                 if (res.status === 401) {
                     setError("Session expired. Please login again.");
                     setBookings([]);
@@ -48,7 +53,7 @@ export default function MyBooking() {
                 }
 
                 const data = await res.json();
-                
+
                 if (Array.isArray(data)) {
                     setBookings(data);
                 } else {
@@ -112,11 +117,10 @@ export default function MyBooking() {
                                     <td>{b.studentEmail}</td>
 
                                     <td>
-                                        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                                            b.bookStatus === "cancelled"
+                                        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${b.bookStatus === "cancelled"
                                                 ? "bg-red-100 text-red-600"
                                                 : "bg-[#8FDDDF] text-black"
-                                        }`}>
+                                            }`}>
                                             {b.bookStatus}
                                         </span>
                                     </td>

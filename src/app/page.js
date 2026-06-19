@@ -10,6 +10,10 @@ async function getTutors() {
     cache: "no-store",
   }
 );
+if (!res.ok) {
+    console.error("Fetch failed:", res.status);
+    return []; 
+}
   const data = await res.json();
   return data;
 }
